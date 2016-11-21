@@ -5,6 +5,7 @@
 {% block title %}{{ 'product.list.title' | trans }}{% endblock %}
 {% block body %}
 {{ parent() }}
+<div class="container">
 <h3>{{ 'product.list.header' | trans }}</h3>
 <table class="table table-striped">
   <thead>
@@ -35,4 +36,5 @@
   </tbody>  
 {% endfor %}
 </table>
+</div>
 {% endblock %}

@@ -19,6 +19,8 @@ class AppKernel extends Kernel
         	new FOS\UserBundle\FOSUserBundle(),
         	new Genemu\Bundle\FormBundle\GenemuFormBundle(),
         	new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            
         	
         	
         );

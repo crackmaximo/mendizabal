@@ -31,6 +31,11 @@ new_client:
     defaults: { _controller:AppBundle:Client:new, _locale: es }
     requirements: 
       _locale : es|en
+create_client:
+    path: /{_locale}/client/create
+    defaults: { _controller:AppBundle:Client:create, _locale: es }
+    requirements: 
+      _locale : es|en
 show_client:
     path: /{_locale}/client/show/{id}
     defaults: { _controller:AppBundle:Client:show, _locale: es }
@@ -158,5 +163,10 @@ search_task:
 autocomplete:
     path: /{_locale}/client/autocomplete
     defaults: { _controller:AppBundle:Client:autocomplete, _locale: es }
+    requirements: 
+      _locale : es|en
+wearType:
+    path: /{_locale}/product/weartype
+    defaults: { _controller:AppBundle:Product:wearType, _locale: es }
     requirements: 
       _locale : es|en

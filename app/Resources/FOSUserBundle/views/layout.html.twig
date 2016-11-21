@@ -1,11 +1,12 @@
-{% extends '::base.html.twig' %}
-
+{% extends "::layout.html.twig" %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
 
 {% block title %}Seguridad{% endblock %}
 
-{% block content %}
+{% block body %}
+{{ parent() }}
 <div class="row">
-	<div class="col-sm-5">
+	<div class="col-sm-3">
     	{% block fos_user_content %}
     	{% endblock %}
     <div>

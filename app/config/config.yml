@@ -39,6 +39,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+        - "form/fields.html.twig"
 
 # Doctrine Configuration
 doctrine:
@@ -78,4 +80,8 @@ genemu_form:
 services:
     fos_user.doctrine_registry:
         alias: doctrine
-
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~

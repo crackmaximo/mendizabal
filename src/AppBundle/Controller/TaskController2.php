@@ -11,7 +11,6 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Product;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use AppBundle\Form\TaskType;
 
 
 
@@ -20,32 +19,130 @@ class TaskController extends Controller
 {
 
 	public function newAction($id,Request $request){
+		$task = new Task();
 		
-
-		$task = new task();
 		if($id != -1){
 			$em = $this->getDoctrine()->getManager();
 			$client = $em->getRepository('AppBundle:Client')->find($id);
 			$task ->setClient($client);
 		}
 
-		$form = $this->createForm(new TaskType(), $task );
-		
-		if ($request->isMethod('POST')) {
-            $form->bind($request);
-            
-            if ($form->isValid()) {
-            	$em = $this->getDoctrine()->getManager();
+	$task->setStartDate(date("d-m-Y"));
 
-                $em->persist($task);
-                $em->flush();   
-
-                return $this->redirectToRoute('list_task');
-            }
-        }
-		return $this->render('AppBundle:Task:NewTask.html.twig', array('form'=>$form->createView()));
+		$form = $this->createFormBuilder($task, ['translation_domain' => 'AppBundle'])
+			//->add('Client', 'genemu_jqueryselect2_entity', array(
+			//	'class' => 'AppBundle\Entity\Client',
+			//	'placeholder' => 'Choose an option',
+			//	'choice_label' => 'longname',
+			//	'label' => 'task.client'
+			//))
+			->add('Client', 'text', array(
+					'label' => 'task.client',
+					'required' => false
+				))
+			->add('taskType', 'choice', array(
+					'choices' => array('bordado' => 'bordado'),
+					'placeholder' => '',
+					'label' => 'task.taskType'
+					
+			))
+			->add('startDate', 'text', array(
+					'label' => 'task.startDate',
+					'read_only'=> 'true'
+					
+					
+			))
+			->add('endDate', 'date', array(
+					'widget' => 'single_text',
+					'format' => 'dd-MM-yyyy',
+					'label' => 'task.endDate',
+					'invalid_message'=>'dateinvalid',
+					'required' => true,
+				
+			))
+			->add('taskStatus', 'choice', array(
+					'choices' => array('Sin iniciar' => 'Sin iniciar','En curso' => 'En curso',
+					'Completado' => 'Completado'),
+					'label' => 'task.taskStatus'	
+				))
+			->add('priceFull', 'money', array('label' => 'task.priceFull',
+						//'invalid_message'=>'Formato de moneda incorrecto'
+				'invalid_message'=>'priceinvalid'
+					
+			))
+			->add('quantity', 'integer', array(
+						'label' => 'task.qty'
+				))
+			->add('statusPay', 'choice', array(
+					'choices' => array('Pagado' => 'pagado','A cuenta' => 'a cuenta',
+					'Pendiente' => 'pendiente'),
+					'label' => 'task.statusPay',
+					'placeholder' => 'Elige una opcion'
+				))
+			->add('accountPrice', 'money', array(
+					'label' => 'task.accountPrice',
+					'required' => false,
+					'invalid_message'=>'priceinvalid'
+				))
+			->add('comment', 'textarea', array(
+					'label' => 'task.comment',
+					'required' => false,
+				))
+			->add('name', 'text', array(
+					'label' => 'task.name',
+					'required' => false
+				))
+			->add('sizeName', 'choice', array(
+						'choices'   => array(
+						'G'	=> 'Grande',
+						'P' => 'Pequeño'),
+						'expanded' =>true,
+						'multiple'  => false,
+						'required'  => false,
+						'label' => 'task.sizeName',
+					'required' => false
+				))
+			->add('Product', 'entity', array(
+						'class' => 'AppBundle:Product',
+						'group_by' => 'wearType',
+						'placeholder' => 'Elige una opcion',
+						'label' => 'task.product'))
+			->add('Falla', 'entity', array(
+						'class' => 'AppBundle:Falla',
+						'choice_label' => 'name',
+						'label' => 'task.falla',
+						'placeholder' => 'Elige una opcion'
+				))
+			/*->add('Client', 'entity', array(
+						'class' => 'AppBundle:Client',
+						
+						'label' => 'client'))*/
+			->add('save', 'submit', array('label'=>'task.form.save'))
+							
+			->add('saveAndAdd', 'submit', array('label'=>'task.form.saveAndAdd'))
+			
+							
+		->getForm();
+		$form->handleRequest($request);
 		
-	}	
+		if($form->isValid()){
+								
+			$em = $this->getDoctrine()->getManager();
+
+			$em->persist($task);
+								
+			$em->flush();
+
+			if($form->get('saveAndAdd')->isClicked()){
+
+				return $this->redirectToRoute('new_task');
+
+			}
+		return $this->redirectToRoute('list_task');
+								
+		}
+		return $this->render('AppBundle:Task:NewTask.html.twig', array('form'=>$form->createView()));;
+	}
 	
 	public function listAction(){
 		$em = $this->getDoctrine()->getRepository('AppBundle:Task');

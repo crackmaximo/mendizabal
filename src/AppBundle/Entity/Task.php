@@ -4,9 +4,11 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
- * Category
+ * 
  *
  * @ORM\Table()
  * @ORM\Entity
@@ -23,12 +25,6 @@ class Task{
 	*/
 	protected $id;
 	
-	/**
-	* @var string
-	*
-	* @ORM\Column(name="tasktype", type="string", length=255, nullable=true)
-	*/
-	protected $taskType;
 	
 	/**
 	 * @ORM\Column(type="string",nullable=true)
@@ -44,17 +40,11 @@ class Task{
 	 */
 	protected $endDate;
 	
-	/**
-	 * @ORM\Column(type="integer",nullable=true)
+    /**
+     * @ORM\Column(type="integer",nullable=true)
      *              
-	 */
-	protected $priceFull;
-	
-	/**
-	 * @ORM\Column(type="integer",nullable=true)
-     *          
-	 */
-	protected $quantity;
+     */
+    protected $priceFull;
 	
 	/**
 	 * @var string
@@ -89,28 +79,24 @@ class Task{
 	protected $client;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Product", inversedBy="tasksPro")
-	 * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
-	 */
-	protected $product;
-	
-	/**
 	 * @ORM\ManyToOne(targetEntity="Falla", inversedBy="tasksF")
 	 * @ORM\JoinColumn(name="falla_id", referencedColumnName="id", nullable=false)
 	 */
 	protected $falla;
-	
-	/**
-	 * @ORM\Column(type="string", length=100, nullable=true)
-	 * 
-	 */
-	protected $name;
-	
-	/**
-	 *
-	 * @ORM\Column(type="string",nullable=true)
-	 */
-	protected $sizeName;
+
+    /**
+     * @ORM\OneToMany(targetEntity="LineTask", mappedBy="task", cascade={"persist"})
+     */
+    protected $linetasks;
+    
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->linetasks = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -123,32 +109,9 @@ class Task{
     }
 
     /**
-     * Set taskType
-     *
-     * @param string $taskType
-     * @return Task
-     */
-    public function setTaskType($taskType)
-    {
-        $this->taskType = $taskType;
-
-        return $this;
-    }
-
-    /**
-     * Get taskType
-     *
-     * @return string 
-     */
-    public function getTaskType()
-    {
-        return $this->taskType;
-    }
-
-    /**
      * Set startDate
      *
-     * @param \DateTime $startDate
+     * @param string $startDate
      * @return Task
      */
     public function setStartDate($startDate)
@@ -161,7 +124,7 @@ class Task{
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return string 
      */
     public function getStartDate()
     {
@@ -215,29 +178,6 @@ class Task{
     }
 
     /**
-     * Set quantity
-     *
-     * @param integer $quantity
-     * @return Task
-     */
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * Get quantity
-     *
-     * @return integer 
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    /**
      * Set taskStatus
      *
      * @param string $taskStatus
@@ -281,6 +221,29 @@ class Task{
     public function getAccountPrice()
     {
         return $this->accountPrice;
+    }
+
+    /**
+     * Set statusPay
+     *
+     * @param string $statusPay
+     * @return Task
+     */
+    public function setStatusPay($statusPay)
+    {
+        $this->statusPay = $statusPay;
+
+        return $this;
+    }
+
+    /**
+     * Get statusPay
+     *
+     * @return string 
+     */
+    public function getStatusPay()
+    {
+        return $this->statusPay;
     }
 
     /**
@@ -330,29 +293,6 @@ class Task{
     }
 
     /**
-     * Set product
-     *
-     * @param \AppBundle\Entity\Product $product
-     * @return Task
-     */
-    public function setProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->product = $product;
-
-        return $this;
-    }
-
-    /**
-     * Get product
-     *
-     * @return \AppBundle\Entity\Product 
-     */
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    /**
      * Set falla
      *
      * @param \AppBundle\Entity\Falla $falla
@@ -376,72 +316,36 @@ class Task{
     }
 
     /**
-     * Set name
+     * Add linetasks
      *
-     * @param string $name
+     * @param \AppBundle\Entity\LineTask $linetasks
      * @return Task
      */
-    public function setName($name)
+    public function addLinetask(\AppBundle\Entity\LineTask $linetasks)
     {
-        $this->name = $name;
+        $this->linetasks[] = $linetasks;
+     
 
         return $this;
     }
 
     /**
-     * Get name
+     * Remove linetasks
      *
-     * @return string 
+     * @param \AppBundle\Entity\LineTask $linetasks
      */
-    public function getName()
+    public function removeLinetask(\AppBundle\Entity\LineTask $linetasks)
     {
-        return $this->name;
+        $this->linetasks->removeElement($linetasks);
     }
 
     /**
-     * Set sizeName
+     * Get linetasks
      *
-     * @param integer $sizeName
-     * @return Task
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function setSizeName($sizeName)
+    public function getLinetasks()
     {
-        $this->sizeName = $sizeName;
-
-        return $this;
+        return $this->linetasks;
     }
-
-    /**
-     * Get sizeName
-     *
-     * @return integer 
-     */
-    public function getSizeName()
-    {
-        return $this->sizeName;
-    }
-
-    /**
-     * Set statusPay
-     *
-     * @param string $statusPay
-     * @return Task
-     */
-    public function setStatusPay($statusPay)
-    {
-        $this->statusPay = $statusPay;
-
-        return $this;
-    }
-
-    /**
-     * Get statusPay
-     *
-     * @return string 
-     */
-    public function getStatusPay()
-    {
-        return $this->statusPay;
-    }
-
 }

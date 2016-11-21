@@ -39,15 +39,19 @@ class Product{
 	protected $price;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Task", mappedBy="product", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="LineTask", mappedBy="product", cascade={"persist", "remove"})
 	 */
-	protected $tasksPro;
+	protected $lineProduct;
 	
-	public function __construct()
-	{
-		$this->tasksPro = new ArrayCollection();
-	}
-	
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->lineProduct = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
     /**
      * Get id
      *
@@ -174,38 +178,39 @@ class Product{
     }
 
     /**
-     * Add tasksPro
+     * Add lineProduct
      *
-     * @param \AppBundle\Entity\Task $tasksPro
+     * @param \AppBundle\Entity\LineTask $lineProduct
      * @return Product
      */
-    public function addTasksPro(\AppBundle\Entity\Task $tasksPro)
+    public function addLineProduct(\AppBundle\Entity\LineTask $lineProduct)
     {
-        $this->tasksPro[] = $tasksPro;
+        $this->lineProduct[] = $lineProduct;
 
         return $this;
     }
 
     /**
-     * Remove tasksPro
+     * Remove lineProduct
      *
-     * @param \AppBundle\Entity\Task $tasksPro
+     * @param \AppBundle\Entity\LineTask $lineProduct
      */
-    public function removeTasksPro(\AppBundle\Entity\Task $tasksPro)
+    public function removeLineProduct(\AppBundle\Entity\LineTask $lineProduct)
     {
-        $this->tasksPro->removeElement($tasksPro);
+        $this->lineProduct->removeElement($lineProduct);
     }
 
     /**
-     * Get tasksPro
+     * Get lineProduct
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getTasksPro()
+    public function getLineProduct()
     {
-        return $this->tasksPro;
+        return $this->lineProduct;
     }
+
     public function __toString(){
-    	return sprintf(" %s %s %s %s",$this->getWearType(),$this->getSize(),$this->getColour(),$this->getSex());
+        return sprintf(" %s %s %s %s",$this->getWearType(),$this->getSize(),$this->getColour(),$this->getSex());
     }
 }

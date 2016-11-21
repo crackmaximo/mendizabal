@@ -12,7 +12,6 @@
         <tr>
           <th>{{ 'index.id' | trans }}</th>
           <th>{{ 'index.client' | trans }}</th>
-          <th>{{ 'index.taskType' | trans }}</th>
           <th>{{ 'index.taskStatus' | trans }}</th>
           <th>{{ 'index.falla' | trans }}</th>
           <th>{{ 'index.priceFull' | trans }}</th>   
@@ -23,7 +22,6 @@
         <tr>
           	<td><a href="{{ path('show_task',{'id': task.getId }) }}">{{  task.getId }}</a></td>
           	<td><a href="{{ path('show_client',{'id': task.client.getId }) }}">{{  task.getClient }}</a></td>
-        	<td>{{  task.getTaskType }}</td>
         	<td>{{  task.getTaskStatus }}</td>
         	<td>{{  task.getFalla }}</td>
         	<td>€{{  task.getPriceFull }}</td>

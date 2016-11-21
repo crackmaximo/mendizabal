@@ -163,4 +163,22 @@ class ProductController extends Controller
 		}
 	return $this->render('AppBundle:Admin:NewProduct.html.twig', array('form'=>$form->createView()));;
 	}
+
+	public function wearTypeAction (){
+	
+		$em = $this->getDoctrine()->getRepository('AppBundle:Product');
+		$productos = $em->findAll();	
+
+        foreach ($productos as $entity)
+        {
+            $prod[] = $entity->getWearType();
+            
+        }
+
+        $response = new JsonResponse();
+        $response->setData($prod);
+
+        return $response;
+		
+	}	
 }		

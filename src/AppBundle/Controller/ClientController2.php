@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Task;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Form\ClientType;
 
 
 class ClientController extends Controller
@@ -18,39 +17,40 @@ class ClientController extends Controller
 	public function newAction(Request $request){
 		
 		$cliente = new  Client();
-        $form = $this->createCreateForm($cliente);
-
-        
-        return $this->render('AppBundle:Client:NewClient.html.twig', array('form'=>$form->createView()));
-    }
-
-    private function createCreateForm(Client $entity)
-    {
-        $form = $this->createForm(new ClientType(), $entity, array(
-                'action' => $this->generateUrl('create_client')
-                
-            ));
-        
-        return $form;
-    }
-
-	public function createAction(Request $request)
-    {   
-        $cliente = new Client();
-        $form = $this->createCreateForm($cliente);
-        $form->handleRequest($request);
-
-	
-		if($form->isValid()){
-					
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($cliente);
-			$em->flush();
-			
-			return $this->redirectToRoute('list_client');
-			
-		}
 		
+	
+		$form = $this->createFormBuilder($cliente, ['translation_domain' => 'AppBundle'])
+			->add('name', 'text', array(
+				'label' => 'client.name'))
+			->add('phone', 'text',array(
+				'label' => 'client.phone'))
+			
+			->add('save', 'submit', array('label'=>'client.form.save'))
+			
+			->add('saveAndAdd', 'submit', array('label'=>'client.form.saveAndAdd'))
+			
+			->getForm();
+			
+		$form->handleRequest($request);
+	
+				if($form->isValid()){
+					
+					$em = $this->getDoctrine()->getManager();
+				
+					$em->persist($cliente);
+					
+					$em->flush();
+					$id= $cliente->getId();
+					
+					if($form->get('saveAndAdd')->isClicked()){
+					
+						return $this->redirectToRoute('new_task_client', array('id' => $id), 301);
+			
+					}
+					return $this->redirectToRoute('list_client');
+					
+					
+				}
 		return $this->render('AppBundle:Client:NewClient.html.twig', array('form'=>$form->createView()));;
 	}
 	

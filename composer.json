@@ -25,7 +25,9 @@
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "ircmaxell/password-compat": "^1.0",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "twig/extensions": "~1.2"
+        "twig/extensions": "~1.2",
+        "symfony/assetic-bundle": "^2.8"
+        
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
