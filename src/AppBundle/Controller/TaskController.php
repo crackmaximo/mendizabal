@@ -28,7 +28,8 @@ class TaskController extends Controller
 			$client = $em->getRepository('AppBundle:Client')->find($id);
 			$task ->setClient($client);
 		}
-
+		$task->setStartDate(date("d-m-Y"));
+		
 		$form = $this->createForm(new TaskType(), $task );
 		
 		if ($request->isMethod('POST')) {

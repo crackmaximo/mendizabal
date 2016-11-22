@@ -15,11 +15,15 @@ class TaskType extends AbstractType
     {
         $builder
 
-            ->add('startDate')
+            ->add('startDate', 'text', array(
+                    'label' => 'task.startDate',
+                    'read_only'=> 'true',
+                    'translation_domain' => 'AppBundle'
+                ))
             ->add('endDate', 'date', array(
                     'widget' => 'single_text',
                     'format' => 'dd-MM-yyyy',
-                    'label' => 'endDate',
+                    'label' => 'task.endDate',
                     'invalid_message'=>'fecha erronea',
                     'translation_domain' => 'AppBundle'  
                 ))
@@ -42,13 +46,14 @@ class TaskType extends AbstractType
             ->add('statusPay', 'choice', array(
                     'choices' => array('Pagado' => 'pagado','A cuenta' => 'a cuenta',
                     'Pendiente' => 'pendiente'),
-                    'label' => 'statusPay',
+                    'label' => 'task.statusPay',
                     'placeholder' => 'Elige una opcion',
                     'translation_domain' => 'AppBundle'
                 ))
             ->add('comment', 'textarea', array(
                     'label' => 'task.comment',
                     'required' => false,
+                    'translation_domain' => 'AppBundle'
                 ))
             //->add('client','text', array(
             //        'label' => 'cliente',
@@ -56,15 +61,17 @@ class TaskType extends AbstractType
             //    ))
             ->add('Client', 'entity', array(
                         'class' => 'AppBundle:Client',
-                        'label' => 'client',
+                        'label' => 'task.client',
                         'choice_label' => 'longname',
-                        'placeholder' => ''
+                        'placeholder' => '',
+                        'translation_domain' => 'AppBundle'
                 ))
             ->add('falla', 'entity', array(
                         'class' => 'AppBundle:Falla',
                         'choice_label' => 'name',
                         'label' => 'task.falla',
-                        'placeholder' => 'Elige una opcion'
+                        'placeholder' => 'Elige una opcion',
+                        'translation_domain' => 'AppBundle'
                 ))
             ->add('linetasks','collection', array(
                 'type'         => new LineTaskType(),                
@@ -75,7 +82,13 @@ class TaskType extends AbstractType
 
                 ))
 
-            ->add('save', 'submit', array('label'=>'task.form.save'))        
+            ->add('save', 'submit', array(
+                'label'=>'task.form.save',
+                'translation_domain' => 'AppBundle',
+                'attr'   =>  array(
+                        'class'   => 'btn btn-primary glyphicon glyphicon-ok')
+
+                ))        
         ;
     }
     
