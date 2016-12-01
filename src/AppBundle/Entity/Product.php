@@ -39,10 +39,9 @@ class Product{
 	protected $price;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="LineTask", mappedBy="product", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="LineTask", mappedBy="products", cascade={"persist", "remove"})
 	 */
 	protected $lineProduct;
-	
 
     /**
      * Constructor
@@ -209,8 +208,7 @@ class Product{
     {
         return $this->lineProduct;
     }
-
-    public function __toString(){
+        public function __toString(){
         return sprintf(" %s %s %s %s",$this->getWearType(),$this->getSize(),$this->getColour(),$this->getSex());
     }
 }

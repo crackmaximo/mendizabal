@@ -22,7 +22,7 @@ class TaskController extends Controller
 	public function newAction($id,Request $request){
 		
 
-		$task = new task();
+		$task = new Task();
 		if($id != -1){
 			$em = $this->getDoctrine()->getManager();
 			$client = $em->getRepository('AppBundle:Client')->find($id);
@@ -30,23 +30,30 @@ class TaskController extends Controller
 		}
 		$task->setStartDate(date("d-m-Y"));
 		
-		$form = $this->createForm(new TaskType(), $task );
-		
-		if ($request->isMethod('POST')) {
-            $form->bind($request);
-            
-            if ($form->isValid()) {
-            	$em = $this->getDoctrine()->getManager();
+		$form = $this->createForm(new TaskType(), $task);
 
-                $em->persist($task);
-                $em->flush();   
+        $form->handleRequest($request);
 
-                return $this->redirectToRoute('list_task');
-            }
-        }
-		return $this->render('AppBundle:Task:NewTask.html.twig', array('form'=>$form->createView()));
+		if ($form->isSubmitted() && $form->isValid()){
+			
+			$task = $form->getData();		
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($task);
+			$em->flush();
+			
+			if($form->get('saveAndAdd')->isClicked()){
+					
+				return $this->redirectToRoute('new_task');
+			
+			}
+			return $this->redirectToRoute('list_task');
+			
+		}
 		
-	}	
+		return $this->render('AppBundle:Task:NewTask.html.twig', array('form'=>$form->createView()));;
+	
+}		
+		
 	
 	public function listAction(){
 		$em = $this->getDoctrine()->getRepository('AppBundle:Task');
@@ -85,93 +92,12 @@ class TaskController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$task = $em->getRepository('AppBundle:Task')->find($id);
 		
-		$form = $this->createFormBuilder($task, ['translation_domain' => 'AppBundle'])
-		->add('Client', 'genemu_jqueryselect2_entity', array(
-				'class' => 'AppBundle\Entity\Client',
-				'placeholder' => 'Choose an option',
-				'choice_label' => 'longname',
-				'label' => 'task.client'
-			))
-			->add('taskType', 'choice', array(
-					'choices' => array('bordado' => 'bordado'),
-					'placeholder' => '',
-					'label' => 'task.taskType'
-					
-			))
-			->add('startDate', 'text', array(
-					'label' => 'task.startDate',
-					'read_only'=> 'true'
-					
-			))
-			->add('endDate', DateType::class, array(
-					'widget' => 'single_text',
-					'format' => 'dd-MM-yyyy',
-					'label' => 'task.endDate',
-					'invalid_message'=>'dateinvalid',
-					'required' => true
-			))
-			->add('taskStatus', 'choice', array(
-					'choices' => array('Sin iniciar' => 'Sin iniciar','En curso' => 'En curso',
-					'Completado' => 'Completado'),
-					'label' => 'task.taskStatus'	
-				))
-			->add('priceFull', 'money', array('label' => 'task.priceFull',
-						//'invalid_message'=>'Formato de moneda incorrecto'
-				'invalid_message'=>'priceinvalid'
-					
-			))
-			->add('quantity', 'integer', array(
-						'label' => 'task.qty'
-				))
-			->add('statusPay', 'choice', array(
-					'choices' => array('Pagado' => 'pagado','A cuenta' => 'a cuenta',
-					'Pendiente' => 'pendiente'),
-					'label' => 'task.statusPay',
-					'placeholder' => 'Elige una opcion'
-				))
-			->add('accountPrice', 'money', array(
-					'label' => 'task.accountPrice',
-					'required' => false,
-					'invalid_message'=>'priceinvalid'
-				))
-			->add('comment', 'textarea', array(
-					'label' => 'task.comment',
-					'required' => false,
-				))
-			->add('name', 'text', array(
-					'label' => 'task.name',
-					'required' => false
-				))
-			->add('sizeName', 'choice', array(
-						'choices'   => array(
-						'G'	=> 'Grande',
-						'P' => 'Pequeño'),
-						'expanded' =>true,
-						'multiple'  => false,
-						'required'  => false,
-						'label' => 'task.sizeName',
-					'required' => false
-				))
-			->add('Product', 'entity', array(
-						'class' => 'AppBundle:Product',
-						'group_by' => 'wearType',
-						'placeholder' => 'Elige una opcion',
-						'label' => 'task.product'))
-			->add('Falla', 'entity', array(
-						'class' => 'AppBundle:Falla',
-						'choice_label' => 'name',
-						'label' => 'task.falla',
-						'placeholder' => 'Elige una opcion'
-				))
-												
-		->add('save', 'submit', array('label'=>'save'))
-			
-		->add('saveAndAdd', 'submit', array('label'=>'saveAndAdd'))
-			
-		->getForm();
+		$form = $this->createForm(new TaskType(), $task);
+		
 		$form->handleRequest($request);
 		
 		if($form->isValid()){
+			$task = $form->getData();
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($task);
 			$em->flush();
@@ -179,7 +105,7 @@ class TaskController extends Controller
 			return $this->redirectToRoute('list_task');
 		}
 		return $this->render('AppBundle:Task:NewTask.html.twig', array('form'=>$form->createView()));;
-		}
+	}
 		
 		public function searchTaskAction(Request $request){
 			$task = new Task();

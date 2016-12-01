@@ -8,26 +8,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LineTaskType extends AbstractType
 {
-    
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('priceLine','text', array(
-                  'label' => 'Precio Linea'
-            
-                ))
-                ->add('products','collection', array(
-                    'type'         => new ProductType(),
-                    'allow_add'    => true,
-                    'allow_delete' => true,
-                    'by_reference' => false,
-                    'prototype_name' => '__prod__',
-
-                ))
-            
-            ;
+        $builder->add('priceLine')
+                ->add('products', 'entity', array(
+                        'class' => 'AppBundle:Product',
+                        'group_by' => 'wearType',
+                        'placeholder' => 'Elige una opcion',
+                        'label' => 'task.product'
+                    ))        
+                ;
     }
     
-    
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
@@ -35,10 +33,13 @@ class LineTaskType extends AbstractType
         ));
     }
 
-    
-    public function getName()
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
-        return 'linetask';
+        return 'appbundle_linetask';
     }
+
 
 }

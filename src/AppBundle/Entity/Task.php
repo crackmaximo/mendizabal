@@ -33,8 +33,8 @@ class Task{
 	protected $startDate;
 	
 	/**
-	 * @ORM\Column(type="date",nullable=true)
-	 * @Assert\GreaterThanOrEqual("today")
+	 * @ORM\Column(type="string",nullable=true)
+	 * 
      *                 
 	 *
 	 */
@@ -134,7 +134,7 @@ class Task{
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param string $endDate
      * @return Task
      */
     public function setEndDate($endDate)
@@ -147,7 +147,7 @@ class Task{
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return string 
      */
     public function getEndDate()
     {
@@ -324,8 +324,7 @@ class Task{
     public function addLinetask(\AppBundle\Entity\LineTask $linetasks)
     {
         $this->linetasks[] = $linetasks;
-     
-
+        $linetasks->setTask($this);
         return $this;
     }
 

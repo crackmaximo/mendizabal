@@ -18,7 +18,15 @@ class ClientType extends AbstractType
                 'label' => 'Nombre'))
             ->add('phone', 'text', array(
                 'label' => 'Telefono'))
-            ->add('save', 'submit', array('label'=>'guardar cliente'))
+            ->add('save', 'submit', array(
+                'label'=>'guardar cliente',
+                'attr'=> array('class'=>'btn btn-success btn-circle pull-left')
+                ))
+            ->add('saveAndAdd', 'submit', array(
+                'label'=>'guardar cliente y volver tarea',
+                'attr'=> array('class'=>'btn btn-success btn-circle')
+                ))
+            
             ;
     }
     

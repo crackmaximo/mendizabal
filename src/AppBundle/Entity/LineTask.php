@@ -36,13 +36,12 @@ class LineTask{
 	protected $task;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Product", inversedBy="lineProduct")
+	 * @ORM\ManyToOne(targetEntity="Product", inversedBy="lineProduct", cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
 	 */
 	protected $products;
 
   
-
 
     /**
      * Get id
@@ -100,15 +99,13 @@ class LineTask{
         return $this->task;
     }
 
-    
-
     /**
      * Set products
      *
      * @param \AppBundle\Entity\Product $products
      * @return LineTask
      */
-    public function setProducts(\AppBundle\Entity\Product $products)
+    public function setProducts(\AppBundle\Entity\Product $products = null)
     {
         $this->products = $products;
 

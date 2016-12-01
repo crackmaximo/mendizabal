@@ -13,27 +13,7 @@ class ProductType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('wearType','entity', array(
-                    'class' => 'AppBundle:Product',
-                    'choice_label' => 'wearType',
-                    'label' => 'Tipo de Ropa',
-                    'placeholder' => 'Elige una opcion',
-                    'attr'   =>  array(
-                        'class'   => 'wear')
-                ))
-                ->add('size','text', array(
-                    'label' => 'Talla'
-                ))
-                ->add('colour','text', array(
-                    'label' => 'Color'
-                ))
-                ->add('sex','text', array(
-                    'label' => 'Sexo'
-                ))
-                ->add('price','text', array(
-                    'label' => 'Precio'
-                ))        
-                ;
+        $builder->add('wearType')->add('size')->add('colour')->add('sex')->add('price')        ;
     }
     
     /**

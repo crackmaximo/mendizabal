@@ -20,7 +20,11 @@
 <div class="form-group">
 	<div class="row">
 		<div class="col-sm-4">
-			{{ form_row(form.Client) }}
+			{{ form_row(form.client) }}
+		</div>
+		<div class="col-sm-2">
+			<label>Telefono</label><br>
+			<input id="phone" name="task[Phone]" class="form-control" type="text" value= "">	
 		</div>
 		<div class="col-sm-2">
 			<label>{{ 'task.clientNew' | trans }}</label><br>
@@ -67,11 +71,8 @@
 </div>
 
 <h3>Productos</h3>
-<ul class="tags list-unstyled"  data-prototype="
-    {% filter escape %}
-        {{ include ('prototype.html.twig', {'item': form.linetasks.vars.prototype.products.vars.prototype} )}}
-        {{ include ('prototype2.html.twig', {'item': form.linetasks.vars.prototype} )}}
-    {% endfilter %}">
+<ul class="tags list-unstyled" data-prototype="{{ form_widget(form.linetasks.vars.prototype)|e }}">
+    
 </ul>
     {{ form_row(form.save) }}     
 {{ form_end(form) }}
@@ -85,7 +86,45 @@
         '@AppBundle/Resources/public/js/jquerydata.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-       {{ parent() }}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+   			$("#appbundle_task_client").autocomplete({
+			
+			source: "{{ path('autocomplete') }}",
+			minLength: 2,
+			select: clienteSeleccionado, /* esta es la rutina que extrae el cliente seleccionado */
+        	focus: clienteFoco /* esta es la rutina que muestra el cliente marcado */
+			});
+		$('#appbundle_task_endDate').datepicker({ minDate: 0 });
+		$('#appbundle_task_endDate').datepicker('option', {dateFormat: 'dd/mm/yy'});
+	 
+		});
+		function clienteFoco(event, ui)
+		{
+    		var nombre = ui.item;
+		    // no quiero que jquery despliegue el texto del control porque 
+		    // no puede manejar objetos, asi que escribimos los datos 
+		    // nosotros y cancelamos el evento
+		    // (intenta comentando este codigo para ver a que me refiero)
+		    $("#appbundle_task_client").val(ui.name);
+		    event.preventDefault();
+		}
+		function clienteSeleccionado(event, ui)
+		{
+    		var nombre = ui.item.value;
+    		var telefono = ui.item.value;
+		 
+		    // no quiero que jquery despliegue el texto del control porque 
+		    // no puede manejar objetos, asi que escribimos los datos 
+		    // nosotros y cancelamos el evento
+		    // (intenta comentando este codigo para ver a que me refiero)
+		    $("#appbundle_task_client").val(nombre.name);
+		    $("#phone").val(telefono.phone);
+		    event.preventDefault();
+		}
+	</script>
 {% endblock %}
 {% endblock %}
 

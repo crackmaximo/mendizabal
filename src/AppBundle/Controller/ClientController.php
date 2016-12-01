@@ -18,42 +18,30 @@ class ClientController extends Controller
 	public function newAction(Request $request){
 		
 		$cliente = new  Client();
-        $form = $this->createCreateForm($cliente);
+        
+        $form = $this->createForm(new ClientType(), $cliente);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+			
+			$cliente = $form->getData();		
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($cliente);
+			$em->flush();
+			$id= $cliente->getId();
+			if($form->get('saveAndAdd')->isClicked()){
+					
+				return $this->redirectToRoute('new_task_client', array('id' => $id), 301);
+			
+			}
+			return $this->redirectToRoute('list_client');
+			
+		}
 
         
         return $this->render('AppBundle:Client:NewClient.html.twig', array('form'=>$form->createView()));
     }
 
-    private function createCreateForm(Client $entity)
-    {
-        $form = $this->createForm(new ClientType(), $entity, array(
-                'action' => $this->generateUrl('create_client')
-                
-            ));
-        
-        return $form;
-    }
-
-	public function createAction(Request $request)
-    {   
-        $cliente = new Client();
-        $form = $this->createCreateForm($cliente);
-        $form->handleRequest($request);
-
-	
-		if($form->isValid()){
-					
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($cliente);
-			$em->flush();
-			
-			return $this->redirectToRoute('list_client');
-			
-		}
-		
-		return $this->render('AppBundle:Client:NewClient.html.twig', array('form'=>$form->createView()));;
-	}
-	
 	public function showAction($id){
 		 
 		$client = $this->getDoctrine()
@@ -177,13 +165,21 @@ class ClientController extends Controller
            ->where('c.name LIKE :client')
            ->setParameter('client', '%'.$term.'%')
            ->getQuery()
-           ->getResult();
+           ->getArrayResult();
+
 
         foreach ($entities as $entity)
         {
-            $names[] = $entity->getName();
-            $names[] = $entity->getPhone();
-        }
+        	
+        
+            $names[] = array(
+
+            	'label' =>$entity['name'],
+            	'value' =>$entity
+            	); 
+
+           
+       }
 
         $response = new JsonResponse();
         $response->setData($names);
