@@ -31,9 +31,10 @@ class TaskController extends Controller
 		$task->setStartDate(date("d-m-Y"));
 		
 		$form = $this->createForm(new TaskType(), $task);
-
+	
         $form->handleRequest($request);
-
+      	
+      	
 		if ($form->isSubmitted() && $form->isValid()){
 			
 			$task = $form->getData();		

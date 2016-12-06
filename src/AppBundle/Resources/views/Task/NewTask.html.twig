@@ -8,8 +8,11 @@
 {% block title %}{{ 'task.new.title' | trans }}{% endblock %}
 {% block stylesheets %}
 	{{ parent() }}
+	{{ form_stylesheet(form) }}
+	<link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 {% endblock %}
+
 {% block body %}
 {{ parent() }}
 <div class="container">
@@ -71,7 +74,11 @@
 </div>
 
 <h3>Productos</h3>
-<ul class="tags list-unstyled" data-prototype="{{ form_widget(form.linetasks.vars.prototype)|e }}">
+<ul class="tags list-unstyled" data-prototype="
+
+	{% filter escape %}
+        {{ include ('prototype.html.twig', {'item': form.linetasks.vars.prototype} )}}
+    {% endfilter %}">
     
 </ul>
     {{ form_row(form.save) }}     
@@ -83,39 +90,47 @@
 {% block javascripts %}
     {% javascripts 
         '@AppBundle/Resources/public/js/jqueryformcollection.js'
-        '@AppBundle/Resources/public/js/jquerydata.js' %}
+         %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {{ parent() }}
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	
+ 	{{ form_javascript(form) }}
+
 	<script type="text/javascript">
 		$(function(){
-   			$("#appbundle_task_client").autocomplete({
-			
-			source: "{{ path('autocomplete') }}",
-			minLength: 2,
-			select: clienteSeleccionado, /* esta es la rutina que extrae el cliente seleccionado */
-        	focus: clienteFoco /* esta es la rutina que muestra el cliente marcado */
-			});
+   		$("#appbundle_task_client").autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          url: "{{ path('autocomplete') }}",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function( data ) {
+            response( data );
+            
+          }
+        } );
+      },
+      minLength: 2,
+      select: clienteSeleccionado, /* esta es la rutina que extrae el cliente seleccionado */
+      
+    } );
 		$('#appbundle_task_endDate').datepicker({ minDate: 0 });
 		$('#appbundle_task_endDate').datepicker('option', {dateFormat: 'dd/mm/yy'});
-	 
+	 	$(document).on('change','#appbundle_task_linetasks_0_products', function() {
+	 		var selec = $(this).text();
+	 		alert(selec);
+	 	});
 		});
-		function clienteFoco(event, ui)
-		{
-    		var nombre = ui.item;
-		    // no quiero que jquery despliegue el texto del control porque 
-		    // no puede manejar objetos, asi que escribimos los datos 
-		    // nosotros y cancelamos el evento
-		    // (intenta comentando este codigo para ver a que me refiero)
-		    $("#appbundle_task_client").val(ui.name);
-		    event.preventDefault();
-		}
+		
 		function clienteSeleccionado(event, ui)
 		{
     		var nombre = ui.item.value;
     		var telefono = ui.item.value;
-		 
+		 	
 		    // no quiero que jquery despliegue el texto del control porque 
 		    // no puede manejar objetos, asi que escribimos los datos 
 		    // nosotros y cancelamos el evento
@@ -124,6 +139,19 @@
 		    $("#phone").val(telefono.phone);
 		    event.preventDefault();
 		}
+		function calculaLinea(){
+			
+
+			$('#appbundle_task_linetasks_0_products').change(function(event) {
+				var str = "";
+    			$( "#appbundle_task_linetasks_0_products option:selected" ).each(function() {
+      			str += $( this ).text() + " ";
+      			console.log($str);
+    			});
+			});
+			
+		}
+		
 	</script>
 {% endblock %}
 {% endblock %}

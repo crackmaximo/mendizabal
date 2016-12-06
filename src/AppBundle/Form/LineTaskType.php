@@ -19,7 +19,9 @@ class LineTaskType extends AbstractType
                         'group_by' => 'wearType',
                         'placeholder' => 'Elige una opcion',
                         'label' => 'task.product'
-                    ))        
+                    ))
+                ->add('name')
+                ->add('color')        
                 ;
     }
     

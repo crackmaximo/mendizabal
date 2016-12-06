@@ -51,17 +51,16 @@ class TaskType extends AbstractType
                     'required' => false,
                     'translation_domain' => 'AppBundle'
                 ))
-                //->add('client','text', array(
-                //        'label' => 'cliente',
-                //        'required' => false
-               // ))
-                ->add('client', 'entity', array(
-                        'class' => 'AppBundle:Client',
-                        'label' => 'task.client',
-                        'choice_label' => 'longname',
-                        'placeholder' => '',
-                        'translation_domain' => 'AppBundle'
+                ->add('client','text', array(
+                    'label' => 'cliente',
+                    'required' => false
                 ))
+                //->add('client', 'entity', array(
+                //    'class' => 'AppBundle\Entity\Client',
+                //    'placeholder' => 'Choose an option',
+                //    'choice_label' => 'longname',
+                //    'label' => 'task.client'
+                //))
                 ->add('falla', 'entity', array(
                         'class' => 'AppBundle:Falla',
                         'choice_label' => 'name',

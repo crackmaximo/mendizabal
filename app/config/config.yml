@@ -75,8 +75,6 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: AppBundle\Entity\User
-genemu_form:
-    select2: ~
 services:
     fos_user.doctrine_registry:
         alias: doctrine
@@ -85,3 +83,5 @@ assetic:
     use_controller: '%kernel.debug%'
     filters:
         cssrewrite: ~
+genemu_form:
+    autocomplete: ~
